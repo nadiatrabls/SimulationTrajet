@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import java.sql.PreparedStatement;
+import java.sql.PreparedStatement;
+
 
 public class DatabaseConnection {
 
@@ -39,4 +42,26 @@ JOptionPane.showMessageDialog(null, "Erreur lors de l'enregistrement : " + e.get
 }
 }
 
+
+public static void enregistrerAnnonceur(String nom, String entreprise, String email, String image) {
+    String sql = "INSERT INTO annonceurs (nom, entreprise, email, image) VALUES (?, ?, ?, ?)";
+
+    try (Connection conn = getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setString(1, nom);
+        pstmt.setString(2, entreprise);
+        pstmt.setString(3, email);
+        pstmt.setString(4, image); // Stocke le chemin de l’image
+
+        pstmt.executeUpdate();
+
+        JOptionPane.showMessageDialog(null, "Annonceur enregistré avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Erreur lors de l'enregistrement : " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+    }
 }
+}
+
